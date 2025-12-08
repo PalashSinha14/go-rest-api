@@ -1,1 +1,1 @@
-This is a REST API in golang
+This is a REST API in golang with CRUD operations
