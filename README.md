@@ -1,1 +1,1 @@
-This is a REST API in golang with CRUD(Create, Read, Update, Delete) operations
+This is a REST API in golang with CRUD(Create, Read, Update, Delete) operations usin Gin Framework
