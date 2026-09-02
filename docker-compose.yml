@@ -1,0 +1,43 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: library-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: library
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # The API's own startup pings Mongo, so gate it on the database actually
+      # answering rather than merely on the container having been created.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  api:
+    build: .
+    container_name: library-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: development
+      PORT: "8080"
+      # "mongo" is the service name above; compose resolves it on the shared network.
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DATABASE: library
+      JWT_SECRET: ${JWT_SECRET:-dev-only-insecure-secret-change-me}
+      JWT_TTL: 24h
+      LOAN_PERIOD: 336h
+      MAX_ACTIVE_LOANS: "5"
+      LOG_LEVEL: info
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:

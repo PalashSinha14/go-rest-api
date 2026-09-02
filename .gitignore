@@ -1,0 +1,16 @@
+# Binaries
+/api
+/bin/
+/out/
+
+# Local configuration — never commit real secrets
+.env
+
+# Test and coverage artefacts
+*.out
+coverage.html
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.vscode/
